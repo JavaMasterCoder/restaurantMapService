@@ -1,0 +1,40 @@
+package database.converters;
+
+import javafx.util.Pair;
+import model.restaurants.Coordinate;
+
+import javax.persistence.AttributeConverter;
+import javax.persistence.Convert;
+
+@Convert
+public class CoordinateConverter implements AttributeConverter<Coordinate, String> {
+
+    @Override
+    public String convertToDatabaseColumn(Coordinate coordinate) {
+        Pair<Double, Double> coordinates = coordinate.getCoordinate();
+
+        return new StringBuilder().append(coordinates.getKey())
+                .append(";")
+                .append(coordinates.getValue())
+                .toString();
+    }
+
+    @Override
+    public Coordinate convertToEntityAttribute(String stringCoordinate) {
+        if (stringCoordinate == null) {
+            throw new NullPointerException("Failed to convert null coordinate");
+        }
+        String[] coords = stringCoordinate.split(";");
+
+        if (coords.length != 2) {
+            throw  new IllegalArgumentException("Coordinate can be contained only of two parameters");
+        }
+
+        Double Xcoordinate = Double.parseDouble(coords[0]);
+        Double Ycoordinate = Double.parseDouble(coords[1]);
+
+        Pair<Double, Double> coordinates = new Pair<>(Xcoordinate, Ycoordinate);
+
+        return new Coordinate(coordinates);
+    }
+}

@@ -2,11 +2,36 @@ package model.users;
 
 import model.users.interfaces.IUser;
 
+import javax.persistence.*;
+
+@MappedSuperclass
 public abstract class AbstractUser implements IUser {
+
+    @Id
+    @GeneratedValue
+    private int id;
+
+    @Column
     private String login;
+
+    @Column
     private String password;
-    private String name;
+
+    @Enumerated(EnumType.STRING)
     private EUserStatus userStatus;
+
+    public AbstractUser() {
+    }
+
+    public AbstractUser(String login, String password) {
+        this.login = login;
+        this.password = password;
+        this.userStatus = EUserStatus.IS_WAITING_TO_BE_REGISTERED_BY_ADMIN;
+    }
+
+    public int getId() {
+        return id;
+    }
 
     public String getLogin() {
         return login;
@@ -14,10 +39,6 @@ public abstract class AbstractUser implements IUser {
 
     public String getPassword() {
         return password;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public EUserStatus getStatus() {
@@ -32,8 +53,8 @@ public abstract class AbstractUser implements IUser {
         this.password = password;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public EUserStatus getUserStatus() {
+        return userStatus;
     }
 
     public void setUserStatus(EUserStatus userStatus) {

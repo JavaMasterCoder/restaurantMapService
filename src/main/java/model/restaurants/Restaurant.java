@@ -2,7 +2,9 @@ package model.restaurants;
 
 import database.converters.CommentsConverter;
 import database.converters.CoordinateConverter;
+import javafx.util.Pair;
 import model.common.Comments;
+import model.users.Owner;
 
 import javax.persistence.*;
 
@@ -18,6 +20,11 @@ public class Restaurant {
     private String name;
 
     @Column(nullable = false)
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    private Owner owner;
+
+    @Column(nullable = false)
     @Convert(converter = CommentsConverter.class)
     private Comments comments;
 
@@ -31,8 +38,9 @@ public class Restaurant {
     public Restaurant() {
     }
 
-    public Restaurant(String name, Coordinate coordinate) {
+    public Restaurant(String name, Owner owner, Coordinate coordinate) {
         this.name = name;
+        this.owner = owner;
         this.coordinate = coordinate;
 
         comments = new Comments();

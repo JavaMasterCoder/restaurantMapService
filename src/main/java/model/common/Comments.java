@@ -17,4 +17,8 @@ public class Comments {
     public void addComment(String comment) {
         comments.add(comment);
     }
+
+    public void removeComment(String comment) {
+        comments.remove(comment);
+    }
 }

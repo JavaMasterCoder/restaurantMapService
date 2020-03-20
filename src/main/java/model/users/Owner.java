@@ -10,7 +10,7 @@ import java.util.List;
 @DiscriminatorValue("OWNER")
 public class Owner extends AbstractUser{
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
     @OneToMany(mappedBy = "owner")

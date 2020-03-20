@@ -8,6 +8,7 @@ import javax.persistence.Table;
 @DiscriminatorValue("ADMIN")
 public class AdminUser extends AbstractUser {
     public AdminUser() {
+        super();
     }
 
     public AdminUser(String login, String password) {

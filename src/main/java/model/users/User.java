@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @DiscriminatorValue("USER")
 public class User extends AbstractUser {
 
-    @Column(nullable = false)
+    @Column
     private String name;
 
     public User() {

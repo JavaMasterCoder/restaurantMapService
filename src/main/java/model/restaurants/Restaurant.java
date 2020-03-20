@@ -31,6 +31,9 @@ public class Restaurant {
     @Column
     private int rating = 0;
 
+    @Transient
+    private int rates = 0;
+
     public Restaurant() {
     }
 
@@ -59,11 +62,12 @@ public class Restaurant {
     }
 
     public int getRating() {
-        return rating;
+        return rating / rates;
     }
 
     public void setRating(int rating) {
-        this.rating = rating;
+        rates++;
+        this.rating += rating;
     }
 
     public int getId() {

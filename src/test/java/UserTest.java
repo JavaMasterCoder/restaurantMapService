@@ -1,10 +1,7 @@
 import model.restaurants.Coordinate;
 import model.restaurants.Restaurant;
-import model.users.AbstractUser;
-import model.users.Owner;
-import model.users.User;
+import model.users.*;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -51,6 +48,7 @@ public class UserTest {
         assertNotNull(foundUser);
         assertEquals(user.getLogin(), foundUser.getLogin());
         assertEquals(user.getName(), foundUser.getName());
+        assertEquals(EUserStatus.IS_WAITING_TO_BE_REGISTERED_BY_ADMIN, foundUser.getUserStatus());
         assertEquals(user.getUserStatus(), foundUser.getUserStatus());
 
         manager.getTransaction().commit();
@@ -68,11 +66,12 @@ public class UserTest {
 
         manager.getTransaction().begin();
         manager.persist(owner);
-        Owner foundOwner = (Owner)manager.find(AbstractUser.class, owner.getId());
 
+        Owner foundOwner = (Owner)manager.find(AbstractUser.class, owner.getId());
         assertNotNull(foundOwner);
         assertEquals(owner.getLogin(), foundOwner.getLogin());
         assertEquals(owner.getName(), foundOwner.getName());
+        assertEquals(EUserStatus.IS_WAITING_TO_BE_REGISTERED_BY_ADMIN, foundOwner.getUserStatus());
         assertEquals(owner.getUserStatus(), foundOwner.getUserStatus());
 
         manager.getTransaction().commit();
@@ -106,4 +105,184 @@ public class UserTest {
         manager.getTransaction().commit();
         manager.refresh(foundRestaurant);
     }
+
+    @Test
+    public void createAdminUser() {
+        String login = "admin1";
+        String pass = "pass1";
+
+        AdminUser adminUser = new AdminUser(login, pass);
+
+        manager.getTransaction().begin();
+        manager.persist(adminUser);
+
+        AdminUser foundAdminUser = (AdminUser) manager.find(AbstractUser.class, adminUser.getId());
+        assertNotNull(foundAdminUser);
+        assertEquals(adminUser.getLogin(), foundAdminUser.getLogin());
+        assertEquals(EUserStatus.REGISTERED, foundAdminUser.getUserStatus());
+        assertEquals(adminUser.getUserStatus(), foundAdminUser.getUserStatus());
+
+        manager.getTransaction().commit();
+        manager.refresh(foundAdminUser);
+    }
+
+    @Test
+    public void createUserAndOwnerInOneTableTest() {
+        String userLogin = "userLogin";
+        String userPass = "userPass";
+        String userName = "userName";
+
+        User user = new User(userLogin, userPass, userName);
+
+        String ownerLogin = "ownerLogin";
+        String ownerPass = "ownerPass";
+        String ownerName = "ownerName";
+
+        Owner owner = new Owner(ownerLogin, ownerPass, ownerName);
+
+        manager.getTransaction().begin();
+        manager.persist(user);
+        manager.persist(owner);
+
+        User foundUser = (User)manager.find(AbstractUser.class, user.getId());
+        assertNotNull(foundUser);
+        assertEquals(user.getLogin(), foundUser.getLogin());
+        assertEquals(user.getName(), foundUser.getName());
+        assertEquals(EUserStatus.IS_WAITING_TO_BE_REGISTERED_BY_ADMIN, foundUser.getUserStatus());
+        assertEquals(user.getUserStatus(), foundUser.getUserStatus());
+
+        Owner foundOwner = (Owner)manager.find(AbstractUser.class, owner.getId());
+        assertNotNull(foundOwner);
+        assertEquals(owner.getLogin(), foundOwner.getLogin());
+        assertEquals(owner.getName(), foundOwner.getName());
+        assertEquals(EUserStatus.IS_WAITING_TO_BE_REGISTERED_BY_ADMIN, foundOwner.getUserStatus());
+        assertEquals(owner.getUserStatus(), foundOwner.getUserStatus());
+
+        manager.getTransaction().commit();
+
+        manager.refresh(foundUser);
+        manager.refresh(foundOwner);
+    }
+
+    @Test
+    public void createUserAndAdminUser() {
+        String userLogin = "userLogin";
+        String userPass = "userPass";
+        String userName = "userName";
+
+        User user = new User(userLogin, userPass, userName);
+
+        String login = "admin";
+        String pass = "pass";
+
+        AdminUser adminUser = new AdminUser(login, pass);
+
+        manager.getTransaction().begin();
+        manager.persist(user);
+        manager.persist(adminUser);
+
+        User foundUser = (User)manager.find(AbstractUser.class, user.getId());
+        assertNotNull(foundUser);
+        assertEquals(user.getLogin(), foundUser.getLogin());
+        assertEquals(user.getName(), foundUser.getName());
+        assertEquals(EUserStatus.IS_WAITING_TO_BE_REGISTERED_BY_ADMIN, foundUser.getUserStatus());
+        assertEquals(user.getUserStatus(), foundUser.getUserStatus());
+
+        AdminUser foundAdminUser = (AdminUser) manager.find(AbstractUser.class, adminUser.getId());
+        assertNotNull(foundAdminUser);
+        assertEquals(adminUser.getLogin(), foundAdminUser.getLogin());
+        assertEquals(EUserStatus.REGISTERED, foundAdminUser.getUserStatus());
+        assertEquals(adminUser.getUserStatus(), foundAdminUser.getUserStatus());
+
+        manager.getTransaction().commit();
+        manager.refresh(user);
+        manager.refresh(foundAdminUser);
+    }
+
+    @Test
+    public void createOwnerAndAdminUser() {
+        String ownerLogin = "ownerLogin";
+        String ownerPass = "ownerPass";
+        String ownerName = "ownerName";
+
+        Owner owner = new Owner(ownerLogin, ownerPass, ownerName);
+
+        String login = "admin";
+        String pass = "pass";
+
+        AdminUser adminUser = new AdminUser(login, pass);
+
+        manager.getTransaction().begin();
+        manager.persist(owner);
+        manager.persist(adminUser);
+
+        Owner foundOwner = (Owner)manager.find(AbstractUser.class, owner.getId());
+        assertNotNull(foundOwner);
+        assertEquals(owner.getLogin(), foundOwner.getLogin());
+        assertEquals(owner.getName(), foundOwner.getName());
+        assertEquals(EUserStatus.IS_WAITING_TO_BE_REGISTERED_BY_ADMIN, foundOwner.getUserStatus());
+        assertEquals(owner.getUserStatus(), foundOwner.getUserStatus());
+
+        AdminUser foundAdminUser = (AdminUser) manager.find(AbstractUser.class, adminUser.getId());
+        assertNotNull(foundAdminUser);
+        assertEquals(adminUser.getLogin(), foundAdminUser.getLogin());
+        assertEquals(EUserStatus.REGISTERED, foundAdminUser.getUserStatus());
+        assertEquals(adminUser.getUserStatus(), foundAdminUser.getUserStatus());
+
+        manager.getTransaction().commit();
+        manager.refresh(owner);
+        manager.refresh(foundAdminUser);
+    }
+
+    @Test
+    public void createAllUsers() {
+        String userLogin = "userLogin";
+        String userPass = "userPass";
+        String userName = "userName";
+
+        User user = new User(userLogin, userPass, userName);
+
+        String ownerLogin = "ownerLogin";
+        String ownerPass = "ownerPass";
+        String ownerName = "ownerName";
+
+        Owner owner = new Owner(ownerLogin, ownerPass, ownerName);
+
+        String login = "admin";
+        String pass = "pass";
+
+        AdminUser adminUser = new AdminUser(login, pass);
+
+        manager.getTransaction().begin();
+        manager.persist(user);
+        manager.persist(owner);
+        manager.persist(adminUser);
+
+        User foundUser = (User)manager.find(AbstractUser.class, user.getId());
+        assertNotNull(foundUser);
+        assertEquals(user.getLogin(), foundUser.getLogin());
+        assertEquals(user.getName(), foundUser.getName());
+        assertEquals(EUserStatus.IS_WAITING_TO_BE_REGISTERED_BY_ADMIN, foundUser.getUserStatus());
+        assertEquals(user.getUserStatus(), foundUser.getUserStatus());
+
+        Owner foundOwner = (Owner)manager.find(AbstractUser.class, owner.getId());
+        assertNotNull(foundOwner);
+        assertEquals(owner.getLogin(), foundOwner.getLogin());
+        assertEquals(owner.getName(), foundOwner.getName());
+        assertEquals(EUserStatus.IS_WAITING_TO_BE_REGISTERED_BY_ADMIN, foundOwner.getUserStatus());
+        assertEquals(owner.getUserStatus(), foundOwner.getUserStatus());
+
+        AdminUser foundAdminUser = (AdminUser) manager.find(AbstractUser.class, adminUser.getId());
+        assertNotNull(foundAdminUser);
+        assertEquals(adminUser.getLogin(), foundAdminUser.getLogin());
+        assertEquals(EUserStatus.REGISTERED, foundAdminUser.getUserStatus());
+        assertEquals(adminUser.getUserStatus(), foundAdminUser.getUserStatus());
+
+        manager.getTransaction().commit();
+
+        manager.refresh(foundUser);
+        manager.refresh(foundOwner);
+        manager.refresh(adminUser);
+    }
+
 }

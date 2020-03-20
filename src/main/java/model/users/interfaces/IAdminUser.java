@@ -5,7 +5,7 @@ import model.restaurants.Restaurant;
 import model.users.AbstractUser;
 import model.users.EUserStatus;
 
-public interface IAdminUser extends IUser {
+public interface IAdminUser {
     public void deleteUser(AbstractUser user);
     public void deleteRestaurant(Restaurant restaurant);
     public void deleteComment(Restaurant restaurant, String comment);

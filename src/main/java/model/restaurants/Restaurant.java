@@ -2,14 +2,12 @@ package model.restaurants;
 
 import database.converters.CommentsConverter;
 import database.converters.CoordinateConverter;
-import javafx.util.Pair;
 import model.common.Comments;
 import model.users.Owner;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Restaurants")
 public class Restaurant {
 
     @Id
@@ -19,16 +17,14 @@ public class Restaurant {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     private Owner owner;
 
-    @Column(nullable = false)
+    @Column
     @Convert(converter = CommentsConverter.class)
     private Comments comments;
 
-    @Column
+    @Column(nullable = false)
     @Convert(converter = CoordinateConverter.class)
     private Coordinate coordinate;
 
@@ -62,19 +58,35 @@ public class Restaurant {
         this.comments = comments;
     }
 
-    public Coordinate getCoordinates() {
-        return coordinate;
-    }
-
-    public void setCoordinates(Coordinate coordinate) {
-        this.coordinate = coordinate;
-    }
-
     public int getRating() {
         return rating;
     }
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Owner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Owner owner) {
+        this.owner = owner;
+    }
+
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
     }
 }

@@ -4,7 +4,9 @@ import model.users.interfaces.IUser;
 
 import javax.persistence.*;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING)
 public abstract class AbstractUser implements IUser {
 
     @Id
@@ -39,10 +41,6 @@ public abstract class AbstractUser implements IUser {
 
     public String getPassword() {
         return password;
-    }
-
-    public EUserStatus getStatus() {
-        return userStatus;
     }
 
     public void setLogin(String login) {

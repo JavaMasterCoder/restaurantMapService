@@ -1,0 +1,44 @@
+package database.daos;
+
+import model.users.User;
+
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import java.util.Objects;
+
+public class UserDAO {
+    private EntityManager manager;
+
+    public UserDAO(EntityManager manager) {
+        Objects.requireNonNull(manager, "EntityManager shouldn't be null");
+        this.manager = manager;
+    }
+
+    public User createUser(String login, String password, String name) {
+        User user = new User(login, password, name);
+
+        manager.getTransaction().begin();
+
+        try {
+            manager.persist(user);
+        } catch (Throwable cause) {
+            manager.getTransaction().rollback();
+            throw  cause;
+        }
+
+        manager.getTransaction().commit();
+
+        return user;
+    }
+
+    public User findUserByLogin(String login, String passord) {
+        try {
+            return (User) manager.createQuery("SELECT user from AbstractUser user WHERE user.login = :loginToSearch AND user.password = :password", User.class)
+                    .setParameter("loginToSearch", login)
+                    .setParameter("password", passord)
+                    .getSingleResult();
+        } catch (NoResultException cause) {
+            return null;
+        }
+    }
+}

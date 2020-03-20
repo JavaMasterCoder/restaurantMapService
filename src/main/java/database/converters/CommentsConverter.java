@@ -13,10 +13,14 @@ public class CommentsConverter implements AttributeConverter<Comments, String>{
     public String convertToDatabaseColumn(Comments comments) {
         List<String> commentsList = comments.getComments();
 
+        if (commentsList.isEmpty()) {
+            return "";
+        }
+
         StringBuilder sb = new StringBuilder("");
 
         commentsList.stream()
-                    .limit(commentsList.size() - 2)
+                    .limit(commentsList.size() - 1)
                     .forEach(comment -> sb.append(comment).append(", "));
 
         sb.append(commentsList.get(commentsList.size() - 1));

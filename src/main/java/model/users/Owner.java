@@ -2,13 +2,12 @@ package model.users;
 
 import model.restaurants.Restaurant;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@DiscriminatorValue("OWNER")
 public class Owner extends AbstractUser{
 
     @Column(nullable = false)
@@ -21,8 +20,9 @@ public class Owner extends AbstractUser{
         super();
     }
 
-    public Owner(String login, String password) {
+    public Owner(String login, String password, String name) {
         super(login, password);
+        this.name = name;
         restaurants = new ArrayList<>();
     }
 

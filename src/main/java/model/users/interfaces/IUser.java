@@ -5,7 +5,7 @@ import model.users.EUserStatus;
 public interface IUser {
     public String getLogin();
     public String getPassword();
-    public EUserStatus getStatus();
+    public EUserStatus getUserStatus();
 
     public void setLogin(String login);
     public void setPassword(String password);

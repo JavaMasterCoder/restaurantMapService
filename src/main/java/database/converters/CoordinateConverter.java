@@ -1,6 +1,5 @@
 package database.converters;
 
-import javafx.util.Pair;
 import model.restaurants.Coordinate;
 
 import javax.persistence.AttributeConverter;
@@ -11,11 +10,11 @@ public class CoordinateConverter implements AttributeConverter<Coordinate, Strin
 
     @Override
     public String convertToDatabaseColumn(Coordinate coordinate) {
-        Pair<Double, Double> coordinates = coordinate.getCoordinate();
+        Double[] coordinates = coordinate.getCoordinate();
 
-        return new StringBuilder().append(coordinates.getKey())
+        return new StringBuilder().append(coordinates[0])
                 .append(";")
-                .append(coordinates.getValue())
+                .append(coordinates[1])
                 .toString();
     }
 
@@ -33,8 +32,6 @@ public class CoordinateConverter implements AttributeConverter<Coordinate, Strin
         Double Xcoordinate = Double.parseDouble(coords[0]);
         Double Ycoordinate = Double.parseDouble(coords[1]);
 
-        Pair<Double, Double> coordinates = new Pair<>(Xcoordinate, Ycoordinate);
-
-        return new Coordinate(coordinates);
+        return new Coordinate(new Double[] {Xcoordinate, Ycoordinate});
     }
 }

@@ -91,8 +91,11 @@ public class AdminUserDAOTest {
         manager.persist(user);
 
         AbstractUser foundUser = manager.find(AbstractUser.class, user.getId());
+
+        manager.getTransaction().commit();
         admins.deleteUser(foundUser);
 
+        // Видимо, что-то не понял с EntityManager'ами
         foundUser = manager.find(AbstractUser.class, user.getId());
         assertNull("User should be null", foundUser);
     }

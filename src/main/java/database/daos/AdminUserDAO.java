@@ -38,29 +38,39 @@ public class AdminUserDAO implements IAdminUser {
 
     @Override
     public void deleteUser(AbstractUser user) {
-            manager.createQuery("DELETE FROM AbstractUser user WHERE user.login = : login")
-                    .setParameter("login", user.getLogin())
-                    .executeUpdate();
+        manager.getTransaction().begin();
+        manager.createQuery("DELETE FROM AbstractUser user WHERE user.login = : login")
+                .setParameter("login", user.getLogin())
+                .executeUpdate();
 
+        if (user instanceof Owner) {
+            ((Owner) user).getRestaurants().forEach(this::deleteRestaurant);
+        }
+
+        manager.getTransaction().commit();
     }
 
     @Override
     public void deleteRestaurant(Restaurant restaurant) {
         Owner owner = restaurant.getOwner();
 
-        manager.createQuery("DELETE FROM Restaurant r WHERE r.coordinate = :coordinate", Restaurant.class)
+        manager.getTransaction().begin();
+        manager.createQuery("DELETE FROM Restaurant r WHERE r.coordinate = :coordinate")
                 .setParameter("coordinate", restaurant.getCoordinate())
                 .executeUpdate();
+        manager.getTransaction().commit();
 
         owner.getRestaurants().remove(restaurant);
     }
 
     @Override
     public void deleteComment(Restaurant restaurant, String comment) {
+        manager.getTransaction().begin();
         manager.createQuery("UPDATE Restaurant r SET r.comments = :comment WHERE r.id = :restaurantId", Restaurant.class)
                 .setParameter("comment", restaurant.getComments())
                 .setParameter("restaurantId", restaurant.getId())
                 .executeUpdate();
+        manager.getTransaction().commit();
 
         restaurant.getComments().removeComment(comment);
     }

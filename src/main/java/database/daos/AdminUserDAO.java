@@ -2,13 +2,11 @@ package database.daos;
 
 import model.restaurants.Coordinate;
 import model.restaurants.Restaurant;
-import model.users.AbstractUser;
-import model.users.AdminUser;
-import model.users.EUserStatus;
-import model.users.Owner;
+import model.users.*;
 import model.users.interfaces.IAdminUser;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.Objects;
 
 public class AdminUserDAO implements IAdminUser {
@@ -34,6 +32,16 @@ public class AdminUserDAO implements IAdminUser {
         manager.getTransaction().commit();
 
         return adminUser;
+    }
+
+    public AdminUser findAdminByLogin(String login) {
+        try {
+            return (AdminUser) manager.createQuery("SELECT user from AbstractUser user WHERE user.login = :loginToSearch", AdminUser.class)
+                    .setParameter("loginToSearch", login)
+                    .getSingleResult();
+        } catch (NoResultException cause) {
+            return null;
+        }
     }
 
     @Override

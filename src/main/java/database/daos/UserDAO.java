@@ -31,11 +31,10 @@ public class UserDAO {
         return user;
     }
 
-    public User findUserByLogin(String login, String passord) {
+    public User findUserByLogin(String login) {
         try {
-            return (User) manager.createQuery("SELECT user from AbstractUser user WHERE user.login = :loginToSearch AND user.password = :password", User.class)
+            return (User) manager.createQuery("SELECT user from AbstractUser user WHERE user.login = :loginToSearch", User.class)
                     .setParameter("loginToSearch", login)
-                    .setParameter("password", passord)
                     .getSingleResult();
         } catch (NoResultException cause) {
             return null;

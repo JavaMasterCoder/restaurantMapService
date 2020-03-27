@@ -39,9 +39,9 @@ public class AdminUserDAO implements IAdminUser {
     @Override
     public void deleteUser(AbstractUser user) {
         manager.getTransaction().begin();
-        manager.createQuery("DELETE FROM AbstractUser user WHERE user.login = : login")
+        System.out.println(manager.createQuery("DELETE FROM AbstractUser user WHERE user.login = : login")
                 .setParameter("login", user.getLogin())
-                .executeUpdate();
+                .executeUpdate());
 
         if (user instanceof Owner) {
             ((Owner) user).getRestaurants().forEach(this::deleteRestaurant);

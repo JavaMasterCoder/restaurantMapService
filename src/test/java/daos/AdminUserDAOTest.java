@@ -14,6 +14,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 public class AdminUserDAOTest {
@@ -96,7 +98,9 @@ public class AdminUserDAOTest {
         admins.deleteUser(foundUser);
 
         // Видимо, что-то не понял с EntityManager'ами
-        foundUser = manager.find(AbstractUser.class, user.getId());
-        assertNull("User should be null", foundUser);
+        List<AbstractUser> foundUsers = manager.createQuery("SELECT u FROM AbstractUser u WHERE u.id = :id", AbstractUser.class)
+                .setParameter("id", user.getId())
+                .getResultList();
+        assertTrue(foundUsers.isEmpty());
     }
 }
